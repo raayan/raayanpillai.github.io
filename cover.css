@@ -33,8 +33,6 @@ body {
   color: #fff;
   text-align: center;
   text-shadow: 0 .05rem .1rem rgba(0,0,0,.5);
-    background: url(img/desk.jpg);
-    background-size: cover;
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
@@ -58,7 +56,6 @@ body {
 /* Padding for spacing */
 .inner {
   padding: 2rem;
-    background: rgba(0,0,0,0.5);
 }
 
 
@@ -67,16 +64,15 @@ body {
  */
 
 .masthead {
-
+  margin-bottom: 2rem;
 }
 
 .masthead-brand {
-  margin-top: -20px;
-    padding: 4px;
-  border: .25rem solid white;
+  margin-bottom: 0;
 }
 
 .nav-masthead .nav-link {
+  padding: .25rem 0;
   font-weight: bold;
   color: rgba(255,255,255,.5);
   background-color: transparent;
@@ -85,7 +81,7 @@ body {
 
 .nav-masthead .nav-link:hover,
 .nav-masthead .nav-link:focus {
-  border-bottom-color: rgba(255,255,255,1);
+  border-bottom-color: rgba(255,255,255,.25);
 }
 
 .nav-masthead .nav-link + .nav-link {
@@ -161,9 +157,4 @@ body {
   .cover-container {
     width: 42rem;
   }
-}
-
-
-.lead{
-    padding-bottom: 10px;
 }
