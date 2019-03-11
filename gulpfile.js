@@ -1,47 +1,36 @@
-var gulp = require('gulp'),
-        sass = require('gulp-ruby-sass'),
-        autoprefixer = require('gulp-autoprefixer'),
-        minifycss = require('gulp-minify-css'),
-        rename = require('gulp-rename');
+var gulp = require('gulp');
+var plumber = require('gulp-plumber');
+var uglify = require('gulp-uglify');
+var sass = require('gulp-sass');
+var wait = require('gulp-wait');
+var rename = require('gulp-rename');
+var autoprefixer = require('gulp-autoprefixer');
 
-gulp.task('express', function() {
-  var express = require('express');
-  var app = express();
-  app.use(require('connect-livereload')({port: 35729}));
-  app.use(express.static(__dirname));
-  app.listen(4000, '0.0.0.0');
+gulp.task('scripts', function() {
+    return gulp.src('js/scripts.js')
+        .pipe(plumber(plumber({
+            errorHandler: function (err) {
+                console.log(err);
+                this.emit('end');
+            }
+        })))
+        .pipe(uglify({
+            output: {
+                comments: '/^!/'
+            }
+        }))
+        .pipe(rename({extname: '.min.js'}))
+        .pipe(gulp.dest('js'));
 });
 
-var tinylr;
-gulp.task('livereload', function() {
-  tinylr = require('tiny-lr')();
-    tinylr.listen(35729);
-});
-
-function notifyLiveReload(event) {
-  var fileName = require('path').relative(__dirname, event.path);
-
-  tinylr.changed({
-    body: {
-      files: [fileName]
-    }
-  });
-}
-
-gulp.task('styles', function() {
-  return sass('sass', { style: 'expanded' })
-    .pipe(gulp.dest('css'))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(minifycss())
-    .pipe(gulp.dest('css'));
+gulp.task('styles', function () {
+    return gulp.src('./scss/styles.scss')
+        .pipe(wait(250))
+        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(gulp.dest('./css'));
 });
 
 gulp.task('watch', function() {
-  gulp.watch('sass/*.scss', ['styles']);
-  gulp.watch('*.html', notifyLiveReload);
-  gulp.watch('css/*.css', notifyLiveReload);
-});
-
-gulp.task('default', ['styles', 'express', 'livereload', 'watch'], function() {
-
+    gulp.watch('js/scripts.js', gulp.series('scripts'));
+    gulp.watch('scss/styles.scss', gulp.series('styles'));
 });
